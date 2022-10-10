@@ -4,6 +4,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.NavHostController
+import androidx.navigation.compose.composable
+import com.zekri.mediaplayercompose.domain.AppContainer
+import com.zekri.mediaplayercompose.ui.download_file_browser.FileBrowser
+import com.zekri.mediaplayercompose.ui.download_file_browser.FileBrowserViewModel
+import com.zekri.mediaplayercompose.ui.media_player.MediaPlayerContent
 
 object Routes {
 
@@ -15,13 +20,18 @@ object Routes {
 
 @Composable
 fun NavGraph(
-    navHostController: NavHostController
+    navHostController: NavHostController, appContainer: AppContainer
 ) {
     NavHost(
-        navController = navHostController,
-        startDestination = "", modifier = Modifier
+        navController = navHostController, startDestination = Routes.BROWSER, modifier = Modifier
     ) {
-
+        composable(Routes.BROWSER) {
+            val fileBrowserViewModel = FileBrowserViewModel(appContainer.getFileRepository())
+            FileBrowser(fileBrowserViewModel)
+        }
+        composable(Routes.MEDIA_PLAYER) {
+            MediaPlayerContent()
+        }
 
     }
 
