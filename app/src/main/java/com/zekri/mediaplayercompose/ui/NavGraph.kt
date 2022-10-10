@@ -20,17 +20,17 @@ object Routes {
 
 @Composable
 fun NavGraph(
-    navHostController: NavHostController, appContainer: AppContainer
+    navHostController: NavHostController, appContainer: AppContainer, modifier: Modifier
 ) {
     NavHost(
-        navController = navHostController, startDestination = Routes.BROWSER, modifier = Modifier
+        navController = navHostController, startDestination = Routes.BROWSER, modifier = modifier
     ) {
         composable(Routes.BROWSER) {
             val fileBrowserViewModel = FileBrowserViewModel(appContainer.getFileRepository())
-            FileBrowser(fileBrowserViewModel)
+            FileBrowser(fileBrowserViewModel,modifier)
         }
         composable(Routes.MEDIA_PLAYER) {
-            MediaPlayerContent()
+            MediaPlayerContent(modifier)
         }
 
     }

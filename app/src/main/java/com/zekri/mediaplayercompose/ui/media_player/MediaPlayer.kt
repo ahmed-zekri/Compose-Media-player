@@ -17,27 +17,18 @@ import androidx.compose.ui.semantics.role
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
-import com.zekri.mediaplayercompose.ui.utils.verticalGradientScrim
 import java.time.Duration
 
 
-@Preview
 @Composable
-fun MediaPlayerContent() {
+fun MediaPlayerContent(modifier: Modifier) {
     Column(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxSize()
-            .verticalGradientScrim(
-                color = MaterialTheme.colorScheme.primary.copy(alpha = 0.50f),
-                startYPercentage = 1f,
-                endYPercentage = 0f
-
-            )
             .padding(horizontal = 8.dp)
     ) {
         MediaPlayerTop()
