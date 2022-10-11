@@ -9,6 +9,7 @@ import com.zekri.mediaplayercompose.domain.AppContainer
 import com.zekri.mediaplayercompose.ui.download_file_browser.FileBrowser
 import com.zekri.mediaplayercompose.ui.download_file_browser.FileBrowserViewModel
 import com.zekri.mediaplayercompose.ui.media_player.MediaPlayerContent
+import com.zekri.mediaplayercompose.ui.media_player.MediaPlayerViewModel
 
 object Routes {
 
@@ -27,10 +28,12 @@ fun NavGraph(
     ) {
         composable(Routes.BROWSER) {
             val fileBrowserViewModel = FileBrowserViewModel(appContainer.getFileRepository())
-            FileBrowser(fileBrowserViewModel,modifier)
+            FileBrowser(fileBrowserViewModel, modifier, navHostController)
         }
         composable(Routes.MEDIA_PLAYER) {
-            MediaPlayerContent(modifier)
+
+          val mediaPlayerViewModel= MediaPlayerViewModel(navHostController.previousBackStackEntry?.savedStateHandle)
+            MediaPlayerContent(modifier,mediaPlayerViewModel)
         }
 
     }

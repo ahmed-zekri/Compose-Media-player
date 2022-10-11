@@ -7,6 +7,7 @@ import androidx.compose.material.icons.filled.*
 import androidx.compose.material.icons.rounded.PlayArrow
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
@@ -21,11 +22,13 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
+import com.zekri.mediaplayercompose.common.getAudioInfo
 import java.time.Duration
 
 
 @Composable
-fun MediaPlayerContent(modifier: Modifier) {
+fun MediaPlayerContent(modifier: Modifier, mediaPlayerViewModel: MediaPlayerViewModel) {
+    val audioFile by mediaPlayerViewModel.fileState
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -42,7 +45,10 @@ fun MediaPlayerContent(modifier: Modifier) {
                 modifier = Modifier.weight(10f)
             )
             Spacer(modifier = Modifier.height(32.dp))
-            BroadcastDescription(title = "Title", name = "Name")
+            BroadcastDescription(
+                title = audioFile?.name ?: "",
+                name = audioFile?.getAudioInfo()?.Duration ?: ""
+            )
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier.weight(10f)
