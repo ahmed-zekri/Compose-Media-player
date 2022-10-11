@@ -1,9 +1,11 @@
 package com.zekri.mediaplayercompose.ui
 
+import android.app.Activity
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.navigation.compose.NavHost
+import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavHostController
+import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.zekri.mediaplayercompose.domain.AppContainer
 import com.zekri.mediaplayercompose.ui.download_file_browser.FileBrowser
@@ -31,9 +33,12 @@ fun NavGraph(
             FileBrowser(fileBrowserViewModel, modifier, navHostController)
         }
         composable(Routes.MEDIA_PLAYER) {
-
-          val mediaPlayerViewModel= MediaPlayerViewModel(navHostController.previousBackStackEntry?.savedStateHandle)
-            MediaPlayerContent(modifier,mediaPlayerViewModel)
+            val app = (LocalContext.current as Activity).application
+            val mediaPlayerViewModel = MediaPlayerViewModel(
+                navHostController.previousBackStackEntry?.savedStateHandle,
+                app
+            )
+            MediaPlayerContent(modifier, mediaPlayerViewModel)
         }
 
     }

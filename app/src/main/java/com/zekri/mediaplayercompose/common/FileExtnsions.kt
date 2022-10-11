@@ -1,7 +1,12 @@
 package com.zekri.mediaplayercompose.common
 
+import android.content.Context
+import android.media.AudioAttributes
 import android.media.MediaMetadataRetriever
+import android.media.MediaPlayer
 import android.media.UnsupportedSchemeException
+import android.net.Uri
+import androidx.core.net.toUri
 import java.io.File
 
 data class AudioFileType(
@@ -27,7 +32,7 @@ fun File.getAudioInfo(): AudioFileType {
 
     }
 
-   return audioFileType
+    return audioFileType
 
 }
 
@@ -56,3 +61,23 @@ fun formatMilliSecond(milliseconds: Long): String {
 
 }
 
+fun File.playAudioFile(context: Context): MediaPlayer {
+    if (extension !in AUDIO_TYPES)
+        throw UnsupportedSchemeException("Invalid audio file")
+
+    val myUri: Uri = toUri()
+    return MediaPlayer().run {
+        setAudioAttributes(
+            AudioAttributes.Builder()
+                .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
+                .setUsage(AudioAttributes.USAGE_MEDIA)
+                .build()
+        )
+        setDataSource(context, myUri)
+        prepare()
+        start()
+        this
+    }
+
+
+}

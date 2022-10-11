@@ -1,12 +1,14 @@
 package com.zekri.mediaplayercompose.ui.media_player
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material.icons.rounded.PlayArrow
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -29,6 +31,12 @@ import java.time.Duration
 @Composable
 fun MediaPlayerContent(modifier: Modifier, mediaPlayerViewModel: MediaPlayerViewModel) {
     val audioFile by mediaPlayerViewModel.fileState
+
+
+    LaunchedEffect(key1 = true) {
+
+
+    }
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -66,8 +74,9 @@ fun MediaPlayerContent(modifier: Modifier, mediaPlayerViewModel: MediaPlayerView
 private fun PlayerButtons(
     modifier: Modifier = Modifier,
     playerButtonSize: Dp = 72.dp,
-    sideButtonSize: Dp = 48.dp
-) {
+    sideButtonSize: Dp = 48.dp,
+
+    ) {
     Row(
         modifier = modifier.fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically,
@@ -99,6 +108,7 @@ private fun PlayerButtons(
             modifier = Modifier
                 .size(playerButtonSize)
                 .semantics { role = Role.Button }
+                .clickable { }
         )
         Image(
             imageVector = Icons.Filled.ArrowForward,
