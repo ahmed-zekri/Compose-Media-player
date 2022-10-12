@@ -1,4 +1,4 @@
-package com.zekri.mediaplayercompose.ui.download_file_browser
+package com.zekri.mediaplayercompose.ui.file_browser
 
 import android.os.Environment
 import androidx.compose.runtime.MutableState

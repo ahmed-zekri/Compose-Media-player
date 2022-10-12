@@ -1,4 +1,4 @@
-package com.zekri.mediaplayercompose.ui.download_file_browser
+package com.zekri.mediaplayercompose.ui.file_browser
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*

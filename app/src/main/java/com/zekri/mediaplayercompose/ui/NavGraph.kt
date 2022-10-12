@@ -8,8 +8,8 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.zekri.mediaplayercompose.domain.AppContainer
-import com.zekri.mediaplayercompose.ui.download_file_browser.FileBrowser
-import com.zekri.mediaplayercompose.ui.download_file_browser.FileBrowserViewModel
+import com.zekri.mediaplayercompose.ui.file_browser.FileBrowser
+import com.zekri.mediaplayercompose.ui.file_browser.FileBrowserViewModel
 import com.zekri.mediaplayercompose.ui.media_player.MediaPlayerContent
 import com.zekri.mediaplayercompose.ui.media_player.MediaPlayerViewModel
 
