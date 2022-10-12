@@ -7,9 +7,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material.icons.rounded.PlayArrow
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
@@ -25,18 +23,21 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.zekri.mediaplayercompose.common.formatMilliSecond
-import com.zekri.mediaplayercompose.common.getPlayTimeAsFlow
-import com.zekri.mediaplayercompose.common.playAudioFile
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
-import java.time.Duration
 
 
 @Composable
 fun MediaPlayerContent(modifier: Modifier, mediaPlayerViewModel: MediaPlayerViewModel) {
-    val audioFile by mediaPlayerViewModel.fileState
-    val playerPosition by mediaPlayerViewModel.playerPositionState
 
+    val playerRelativePosition = remember {
+        mutableStateOf(0f)
+    }
+    LaunchedEffect(key1 = true) {
+        mediaPlayerViewModel.setMediaPlayerSource()
+        mediaPlayerViewModel.getMediaRelativePositionAsFlow().collect {
+            playerRelativePosition.value = it
+        }
+
+    }
 
     Column(
         modifier = modifier
@@ -54,19 +55,15 @@ fun MediaPlayerContent(modifier: Modifier, mediaPlayerViewModel: MediaPlayerView
             )
             Spacer(modifier = Modifier.height(32.dp))
             BroadcastDescription(
-                title = audioFile?.name ?: "",
-                name = mediaPlayerViewModel.playerDuration.toLong().formatMilliSecond()
+                title = mediaPlayerViewModel.file?.name ?: "",
+                name = mediaPlayerViewModel.getMediaDuration().toLong().formatMilliSecond()
             )
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.weight(10f)
             ) {
-                println(playerPosition.toFloat() / mediaPlayerViewModel.playerDuration)
-                PlayerSlider(
-                    Duration.ofMinutes(
-                        mediaPlayerViewModel.playerDuration.toLong() / 60000,
 
-                        ),
-                    if (mediaPlayerViewModel.playerDuration == 0) 0f else playerPosition.toFloat() / mediaPlayerViewModel.playerDuration
+                PlayerSlider(
+                    mediaPlayerViewModel, playerRelativePosition.value
                 )
                 PlayerButtons(
                     Modifier.padding(vertical = 8.dp), mediaPlayerViewModel = mediaPlayerViewModel
@@ -86,7 +83,7 @@ private fun PlayerButtons(
     mediaPlayerViewModel: MediaPlayerViewModel
 
 ) {
-    val coroutineScope = rememberCoroutineScope()
+
     Row(
         modifier = modifier.fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically,
@@ -118,22 +115,7 @@ private fun PlayerButtons(
                 .size(playerButtonSize)
                 .semantics { role = Role.Button }
                 .clickable {
-
-                    mediaPlayerViewModel.mediaPlayer
-                        .playAudioFile(
-                            mediaPlayerViewModel.getApplication(),
-                            mediaPlayerViewModel.fileState.value!!
-                        )
-                        .apply {
-                            mediaPlayerViewModel.playerDuration = duration
-                            getPlayTimeAsFlow()
-                                .onEach {
-                                    mediaPlayerViewModel._playerPositionState.value = it
-
-                                }
-                                .launchIn(coroutineScope)
-
-                        }
+                    mediaPlayerViewModel.playMedia()
 
                 })
         Image(
@@ -154,17 +136,22 @@ private fun PlayerButtons(
 }
 
 @Composable
-private fun PlayerSlider(episodeDuration: Duration?, playerPosition: Float) {
-    if (episodeDuration != null) {
-        Column(Modifier.fillMaxWidth()) {
-            Slider(value = playerPosition, onValueChange = { })
-            Row(Modifier.fillMaxWidth()) {
-                Text(text = "0s")
-                Spacer(modifier = Modifier.weight(1f))
-                Text("${episodeDuration.seconds}s")
-            }
+private fun PlayerSlider(
+    mediaPlayerViewModel: MediaPlayerViewModel, playerPosition: Float
+) {
+
+
+    Column(Modifier.fillMaxWidth()) {
+        Slider(value = playerPosition, onValueChange = { })
+        Row(Modifier.fillMaxWidth()) {
+            Text(
+                text = ""
+            )
+            Spacer(modifier = Modifier.weight(1f))
+            Text(mediaPlayerViewModel.getMediaDuration().toLong().formatMilliSecond())
         }
     }
+
 }
 
 @Composable

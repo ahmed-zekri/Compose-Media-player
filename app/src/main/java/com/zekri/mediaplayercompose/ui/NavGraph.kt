@@ -29,14 +29,14 @@ fun NavGraph(
         navController = navHostController, startDestination = Routes.BROWSER, modifier = modifier
     ) {
         composable(Routes.BROWSER) {
-            val fileBrowserViewModel = FileBrowserViewModel(appContainer.getFileRepository())
+            val fileBrowserViewModel = FileBrowserViewModel(appContainer.fileRepository)
             FileBrowser(fileBrowserViewModel, modifier, navHostController)
         }
         composable(Routes.MEDIA_PLAYER) {
             val app = (LocalContext.current as Activity).application
             val mediaPlayerViewModel = MediaPlayerViewModel(
                 navHostController.previousBackStackEntry?.savedStateHandle,
-                appContainer.getMediaPlayer(),
+                appContainer,
                 app
             )
             MediaPlayerContent(modifier, mediaPlayerViewModel)

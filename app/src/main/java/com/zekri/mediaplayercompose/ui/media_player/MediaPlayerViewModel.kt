@@ -1,30 +1,33 @@
 package com.zekri.mediaplayercompose.ui.media_player
 
 import android.app.Application
-import android.media.MediaPlayer
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.State
-import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.SavedStateHandle
+import com.zekri.mediaplayercompose.domain.AppContainer
 import java.io.File
 
 
 class MediaPlayerViewModel(
-    savedStateHandle: SavedStateHandle?,
-    val mediaPlayer: MediaPlayer,
-    application: Application
-) :
-    AndroidViewModel(application) {
-    val fileState: MutableState<File?> = mutableStateOf(null)
-    val _playerPositionState = mutableStateOf(0)
-    val playerPositionState: State<Int> = _playerPositionState
-    var playerDuration = 0
+    savedStateHandle: SavedStateHandle?, appContainer: AppContainer, application: Application
+) : AndroidViewModel(application) {
+    val file: File? = savedStateHandle?.get("audio")
+
+    private val mediaPlayerHelper = appContainer.playerHelper
 
 
-    init {
-        fileState.value = savedStateHandle?.get("audio")
+    fun setMediaPlayerSource() =
+        mediaPlayerHelper.setAudioTrack(getApplication(), file!!)
 
-    }
+    fun playMedia() = mediaPlayerHelper.start()
+
+
+    fun pauseMedia() = mediaPlayerHelper.pause()
+
+    fun stopMedia() = mediaPlayerHelper.stop()
+
+    fun getMediaDuration() = mediaPlayerHelper.getTrackDuration()
+
+    fun getMediaRelativePositionAsFlow() = mediaPlayerHelper.getCurrentRelativePositionAsFlow()
+
 
 }
