@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material.icons.rounded.Pause
-import androidx.compose.material.icons.rounded.Phone
 import androidx.compose.material.icons.rounded.PlayArrow
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -100,7 +99,11 @@ private fun PlayerButtons(
             contentDescription = null,
             contentScale = ContentScale.Fit,
             colorFilter = ColorFilter.tint(LocalContentColor.current),
-            modifier = buttonsModifier
+            modifier = buttonsModifier.clickable {
+                mediaPlayerViewModel.setAdjacentTrack(
+                    MediaPlayerViewModel.AdjacentTrack.PREVIOUS
+                )
+            }
         )
         Image(
             imageVector = Icons.Filled.ArrowBack,
@@ -132,7 +135,11 @@ private fun PlayerButtons(
             contentDescription = null,
             contentScale = ContentScale.Fit,
             colorFilter = ColorFilter.tint(LocalContentColor.current),
-            modifier = buttonsModifier.clickable { mediaPlayerViewModel.setNextTrack() }
+            modifier = buttonsModifier.clickable {
+                mediaPlayerViewModel.setAdjacentTrack(
+                    MediaPlayerViewModel.AdjacentTrack.NEXT
+                )
+            }
         )
     }
 }

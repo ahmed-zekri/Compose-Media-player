@@ -21,6 +21,9 @@ class MediaPlayerViewModel(
 
     private val mediaPlayerHelper = appContainer.playerHelper
 
+    init {
+        playMedia()
+    }
 
     fun setMediaPlayerSource() =
         mediaPlayerHelper.setAudioTrack(getApplication(), file.value!!)
@@ -38,9 +41,9 @@ class MediaPlayerViewModel(
 
     fun isPlaying() = mediaPlayerHelper.isPlaying()
 
-    fun setNextTrack() {
+    fun setAdjacentTrack(adjacentTrack: AdjacentTrack) {
         _file.value = files?.run {
-            getOrNull(indexOf(file.value) + 1)?.run {
+            getOrNull(indexOf(file.value) + if (adjacentTrack == AdjacentTrack.NEXT) 1 else -1)?.run {
                 mediaPlayerHelper.reset()
                 mediaPlayerHelper.setAudioTrack(getApplication(), this)
                 mediaPlayerHelper.start()
@@ -49,6 +52,11 @@ class MediaPlayerViewModel(
 
         }
 
+
+    }
+
+    enum class AdjacentTrack {
+        NEXT, PREVIOUS
 
     }
 }
