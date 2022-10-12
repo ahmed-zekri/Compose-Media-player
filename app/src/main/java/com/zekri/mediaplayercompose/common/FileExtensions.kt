@@ -32,18 +32,17 @@ fun File.getAudioInfo(): AudioFileType {
 }
 
 fun Long.formatMilliSecond(): String {
-    var finalTimerString = ""
-    var secondsString = ""
+
 
     val hours = (this / (1000 * 60 * 60)).toInt()
     val minutes = (this % (1000 * 60 * 60)).toInt() / (1000 * 60)
     val seconds = (this % (1000 * 60 * 60) % (1000 * 60) / 1000)
 
-    if (hours > 0) {
-        finalTimerString = "$hours:"
-    }
 
-    secondsString = if (seconds < 10)
+    var finalTimerString = if (hours > 0) "$hours:" else ""
+
+
+    val secondsString = if (seconds < 10)
         "0$seconds"
     else
         "" + seconds
