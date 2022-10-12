@@ -15,11 +15,9 @@ import com.zekri.mediaplayercompose.common.formatMilliSecond
 fun PlayerSlider(
     mediaPlayerViewModel: MediaPlayerViewModel, playerPosition: MutableState<Float>
 ) {
-
-
     Column(Modifier.fillMaxWidth()) {
         Slider(value = playerPosition.value, onValueChange = {
-            val seekPosition=(mediaPlayerViewModel.getMediaDuration() * it).toInt()
+            val seekPosition = (mediaPlayerViewModel.getMediaDuration() * it).toInt()
             mediaPlayerViewModel.pauseMedia()
             playerPosition.value = it
             mediaPlayerViewModel.seekTo(seekPosition)
@@ -27,7 +25,8 @@ fun PlayerSlider(
         })
         Row(Modifier.fillMaxWidth()) {
             Text(
-                text = ""
+                text = (playerPosition.value * mediaPlayerViewModel.getMediaDuration()).toLong()
+                    .formatMilliSecond()
             )
             Spacer(modifier = Modifier.weight(1f))
             Text(mediaPlayerViewModel.getMediaDuration().toLong().formatMilliSecond())
