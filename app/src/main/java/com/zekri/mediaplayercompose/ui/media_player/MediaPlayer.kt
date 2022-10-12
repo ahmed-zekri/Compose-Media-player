@@ -1,5 +1,6 @@
 package com.zekri.mediaplayercompose.ui.media_player
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -8,14 +9,28 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
 import com.zekri.mediaplayercompose.common.formatMilliSecond
+import com.zekri.mediaplayercompose.ui.Routes
 
 
 @Composable
-fun MediaPlayerContent(modifier: Modifier, mediaPlayerViewModel: MediaPlayerViewModel) {
+fun MediaPlayerContent(
+    modifier: Modifier,
+    mediaPlayerViewModel: MediaPlayerViewModel,
+    navHostController: NavHostController
+) {
 
     val playerRelativePosition = remember {
         mutableStateOf(0f)
+    }
+
+    val backCallback = {
+        mediaPlayerViewModel.resetMedia()
+        navHostController.navigate(Routes.BROWSER)
+    }
+    BackHandler(enabled = true) {
+        backCallback()
     }
     LaunchedEffect(key1 = true) {
         mediaPlayerViewModel.setMediaPlayerSource()
@@ -31,7 +46,7 @@ fun MediaPlayerContent(modifier: Modifier, mediaPlayerViewModel: MediaPlayerView
             .fillMaxSize()
             .padding(horizontal = 8.dp)
     ) {
-        MediaPlayerTop()
+        MediaPlayerTop(backCallback)
         Column(
             horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.padding(8.dp)
         ) {

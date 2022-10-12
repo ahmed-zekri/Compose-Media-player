@@ -39,7 +39,7 @@ fun NavGraph(
                 appContainer,
                 app
             )
-            MediaPlayerContent(modifier, mediaPlayerViewModel)
+            MediaPlayerContent(modifier, mediaPlayerViewModel,navHostController)
         }
 
     }

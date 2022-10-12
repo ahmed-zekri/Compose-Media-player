@@ -13,9 +13,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 
 @Composable
-fun MediaPlayerTop() {
+fun MediaPlayerTop(backCallback: () -> Unit) {
     Row(Modifier.fillMaxWidth()) {
-        IconButton(onClick = { /*TODO*/ }) {
+        IconButton(onClick = { backCallback() }) {
             Icon(imageVector = Icons.Default.ArrowBack, contentDescription = null)
         }
         Spacer(modifier = Modifier.weight(1f))

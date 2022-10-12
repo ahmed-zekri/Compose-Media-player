@@ -34,6 +34,7 @@ class MediaPlayerViewModel(
     fun pauseMedia() = mediaPlayerHelper.pause().also { _playerState.value = false }
 
     fun stopMedia() = mediaPlayerHelper.stop().also { _playerState.value = false }
+    fun resetMedia() = mediaPlayerHelper.reset().also { _playerState.value = false }
 
     fun getMediaDuration() = mediaPlayerHelper.getTrackDuration()
 
