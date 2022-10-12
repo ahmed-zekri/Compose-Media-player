@@ -16,8 +16,8 @@ class MediaPlayerViewModel(
     val file: State<File?> = _file
 
     private val files: List<File>? = savedStateHandle?.get("audioFiles")
-    private val _playerStata = mutableStateOf(false)
-    val playerState: State<Boolean> = _playerStata
+    private val _playerState = mutableStateOf(false)
+    val playerState: State<Boolean> = _playerState
 
     private val mediaPlayerHelper = appContainer.playerHelper
 
@@ -25,12 +25,12 @@ class MediaPlayerViewModel(
     fun setMediaPlayerSource() =
         mediaPlayerHelper.setAudioTrack(getApplication(), file.value!!)
 
-    fun playMedia() = mediaPlayerHelper.start().also { _playerStata.value = true }
+    fun playMedia() = mediaPlayerHelper.start().also { _playerState.value = true }
 
 
-    fun pauseMedia() = mediaPlayerHelper.pause().also { _playerStata.value = false }
+    fun pauseMedia() = mediaPlayerHelper.pause().also { _playerState.value = false }
 
-    fun stopMedia() = mediaPlayerHelper.stop().also { _playerStata.value = false }
+    fun stopMedia() = mediaPlayerHelper.stop().also { _playerState.value = false }
 
     fun getMediaDuration() = mediaPlayerHelper.getTrackDuration()
 
