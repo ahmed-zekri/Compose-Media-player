@@ -5,6 +5,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.rounded.Pause
 import androidx.compose.material.icons.rounded.Phone
 import androidx.compose.material.icons.rounded.PlayArrow
 import androidx.compose.material3.*
@@ -95,20 +96,20 @@ private fun PlayerButtons(
             .semantics { role = Role.Button }
 
         Image(
-            imageVector = Icons.Filled.PlayArrow,
+            imageVector = Icons.Filled.SkipPrevious,
             contentDescription = null,
             contentScale = ContentScale.Fit,
             colorFilter = ColorFilter.tint(LocalContentColor.current),
             modifier = buttonsModifier
         )
         Image(
-            imageVector = Icons.Filled.PlayArrow,
+            imageVector = Icons.Filled.ArrowBack,
             contentDescription = null,
             contentScale = ContentScale.Fit,
             colorFilter = ColorFilter.tint(LocalContentColor.current),
             modifier = buttonsModifier
         )
-        Image(imageVector =  if (!mediaPlayerViewModel.playerState.value) Icons.Rounded.PlayArrow else Icons.Rounded.Phone,
+        Image(imageVector = if (!mediaPlayerViewModel.playerState.value) Icons.Rounded.PlayArrow else Icons.Rounded.Pause,
             contentDescription = null,
             contentScale = ContentScale.Fit,
             colorFilter = ColorFilter.tint(LocalContentColor.current),
@@ -127,7 +128,7 @@ private fun PlayerButtons(
             modifier = buttonsModifier
         )
         Image(
-            imageVector = Icons.Filled.ArrowBack,
+            imageVector = Icons.Filled.SkipNext,
             contentDescription = null,
             contentScale = ContentScale.Fit,
             colorFilter = ColorFilter.tint(LocalContentColor.current),
