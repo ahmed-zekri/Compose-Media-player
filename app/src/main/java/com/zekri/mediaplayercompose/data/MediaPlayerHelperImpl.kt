@@ -50,7 +50,6 @@ class MediaPlayerHelperImpl : MediaPlayerHelper {
 
             delay(REFRESH_TIME)
             if (player.isPlaying)
-
                 emit(getTrackRelativePosition())
 
         }
@@ -63,5 +62,8 @@ class MediaPlayerHelperImpl : MediaPlayerHelper {
     override fun pause() = player.pause()
 
     override fun stop() = player.stop()
+
+    override fun reset() = player.reset()
+
     override fun isPlaying() = player.isPlaying
 }

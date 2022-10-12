@@ -12,7 +12,10 @@ import java.io.File
 class MediaPlayerViewModel(
     savedStateHandle: SavedStateHandle?, appContainer: AppContainer, application: Application
 ) : AndroidViewModel(application) {
-    val file: File? = savedStateHandle?.get("audio")
+    private val _file = mutableStateOf<File?>(savedStateHandle?.get("audio"))
+    val file: State<File?> = _file
+
+    private val files: List<File>? = savedStateHandle?.get("audioFiles")
     private val _playerStata = mutableStateOf(false)
     val playerState: State<Boolean> = _playerStata
 
@@ -20,7 +23,7 @@ class MediaPlayerViewModel(
 
 
     fun setMediaPlayerSource() =
-        mediaPlayerHelper.setAudioTrack(getApplication(), file!!)
+        mediaPlayerHelper.setAudioTrack(getApplication(), file.value!!)
 
     fun playMedia() = mediaPlayerHelper.start().also { _playerStata.value = true }
 
@@ -35,5 +38,17 @@ class MediaPlayerViewModel(
 
     fun isPlaying() = mediaPlayerHelper.isPlaying()
 
+    fun setNextTrack() {
+        _file.value = files?.run {
+            getOrNull(indexOf(file.value) + 1)?.run {
+                mediaPlayerHelper.reset()
+                mediaPlayerHelper.setAudioTrack(getApplication(), this)
+                mediaPlayerHelper.start()
+                this
+            }
 
+        }
+
+
+    }
 }

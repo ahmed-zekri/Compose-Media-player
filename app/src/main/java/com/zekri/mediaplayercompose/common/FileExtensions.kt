@@ -43,11 +43,11 @@ fun Long.formatMilliSecond(): String {
         finalTimerString = "$hours:"
     }
 
-    secondsString = if (seconds < 10) {
+    secondsString = if (seconds < 10)
         "0$seconds"
-    } else {
+    else
         "" + seconds
-    }
+
 
     finalTimerString = "$finalTimerString$minutes:$secondsString"
 

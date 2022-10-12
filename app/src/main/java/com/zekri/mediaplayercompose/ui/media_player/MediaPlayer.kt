@@ -57,7 +57,7 @@ fun MediaPlayerContent(modifier: Modifier, mediaPlayerViewModel: MediaPlayerView
             )
             Spacer(modifier = Modifier.height(32.dp))
             BroadcastDescription(
-                title = mediaPlayerViewModel.file?.name ?: "",
+                title = mediaPlayerViewModel.file.value?.name ?: "",
                 name = mediaPlayerViewModel.getMediaDuration().toLong().formatMilliSecond()
             )
             Column(
@@ -132,7 +132,7 @@ private fun PlayerButtons(
             contentDescription = null,
             contentScale = ContentScale.Fit,
             colorFilter = ColorFilter.tint(LocalContentColor.current),
-            modifier = buttonsModifier
+            modifier = buttonsModifier.clickable { mediaPlayerViewModel.setNextTrack() }
         )
     }
 }

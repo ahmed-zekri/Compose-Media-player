@@ -17,4 +17,5 @@ interface MediaPlayerHelper {
     fun pause()
     fun stop()
     fun isPlaying(): Boolean
+    fun reset()
 }

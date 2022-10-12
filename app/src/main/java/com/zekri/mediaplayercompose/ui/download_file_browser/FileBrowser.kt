@@ -45,16 +45,17 @@ fun FileBrowser(
 fun FileBrowserList(data: List<File>, modifier: Modifier, navHostController: NavHostController) {
     LazyColumn(modifier = modifier.fillMaxSize()) {
         items(data.size) {
-            FileItem(data[it], navHostController)
+            FileItem(data[it], navHostController, data)
 
         }
     }
 }
 
 @Composable
-fun FileItem(file: File, navHostController: NavHostController) {
+fun FileItem(file: File, navHostController: NavHostController, fileList: List<File>) {
     Column(modifier = Modifier.clickable {
         navHostController.currentBackStackEntry?.savedStateHandle?.set("audio", file)
+        navHostController.currentBackStackEntry?.savedStateHandle?.set("audioFiles", fileList)
         navHostController.navigate(Routes.MEDIA_PLAYER)
     }) {
         Row(
