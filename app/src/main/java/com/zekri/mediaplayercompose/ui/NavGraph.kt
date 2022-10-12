@@ -36,6 +36,7 @@ fun NavGraph(
             val app = (LocalContext.current as Activity).application
             val mediaPlayerViewModel = MediaPlayerViewModel(
                 navHostController.previousBackStackEntry?.savedStateHandle,
+                appContainer.getMediaPlayer(),
                 app
             )
             MediaPlayerContent(modifier, mediaPlayerViewModel)

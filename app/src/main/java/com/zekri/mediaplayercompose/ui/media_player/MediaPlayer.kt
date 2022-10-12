@@ -8,8 +8,8 @@ import androidx.compose.material.icons.filled.*
 import androidx.compose.material.icons.rounded.PlayArrow
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
@@ -24,19 +24,20 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
-import com.zekri.mediaplayercompose.common.getAudioInfo
+import com.zekri.mediaplayercompose.common.formatMilliSecond
+import com.zekri.mediaplayercompose.common.getPlayTimeAsFlow
+import com.zekri.mediaplayercompose.common.playAudioFile
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import java.time.Duration
 
 
 @Composable
 fun MediaPlayerContent(modifier: Modifier, mediaPlayerViewModel: MediaPlayerViewModel) {
     val audioFile by mediaPlayerViewModel.fileState
+    val playerPosition by mediaPlayerViewModel.playerPositionState
 
 
-    LaunchedEffect(key1 = true) {
-
-
-    }
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -44,8 +45,7 @@ fun MediaPlayerContent(modifier: Modifier, mediaPlayerViewModel: MediaPlayerView
     ) {
         MediaPlayerTop()
         Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier.padding(8.dp)
+            horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.padding(8.dp)
         ) {
             Spacer(modifier = Modifier.weight(1f))
             PlayerImage(
@@ -55,14 +55,22 @@ fun MediaPlayerContent(modifier: Modifier, mediaPlayerViewModel: MediaPlayerView
             Spacer(modifier = Modifier.height(32.dp))
             BroadcastDescription(
                 title = audioFile?.name ?: "",
-                name = audioFile?.getAudioInfo()?.Duration ?: ""
+                name = mediaPlayerViewModel.playerDuration.toLong().formatMilliSecond()
             )
             Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier.weight(10f)
+                horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.weight(10f)
             ) {
-                PlayerSlider(Duration.ofHours(1))
-                PlayerButtons(Modifier.padding(vertical = 8.dp))
+                println(playerPosition.toFloat() / mediaPlayerViewModel.playerDuration)
+                PlayerSlider(
+                    Duration.ofMinutes(
+                        mediaPlayerViewModel.playerDuration.toLong() / 60000,
+
+                        ),
+                    if (mediaPlayerViewModel.playerDuration == 0) 0f else playerPosition.toFloat() / mediaPlayerViewModel.playerDuration
+                )
+                PlayerButtons(
+                    Modifier.padding(vertical = 8.dp), mediaPlayerViewModel = mediaPlayerViewModel
+                )
             }
             Spacer(modifier = Modifier.weight(1f))
         }
@@ -75,8 +83,10 @@ private fun PlayerButtons(
     modifier: Modifier = Modifier,
     playerButtonSize: Dp = 72.dp,
     sideButtonSize: Dp = 48.dp,
+    mediaPlayerViewModel: MediaPlayerViewModel
 
-    ) {
+) {
+    val coroutineScope = rememberCoroutineScope()
     Row(
         modifier = modifier.fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically,
@@ -100,16 +110,32 @@ private fun PlayerButtons(
             colorFilter = ColorFilter.tint(LocalContentColor.current),
             modifier = buttonsModifier
         )
-        Image(
-            imageVector = Icons.Rounded.PlayArrow,
+        Image(imageVector = Icons.Rounded.PlayArrow,
             contentDescription = null,
             contentScale = ContentScale.Fit,
             colorFilter = ColorFilter.tint(LocalContentColor.current),
             modifier = Modifier
                 .size(playerButtonSize)
                 .semantics { role = Role.Button }
-                .clickable { }
-        )
+                .clickable {
+
+                    mediaPlayerViewModel.mediaPlayer
+                        .playAudioFile(
+                            mediaPlayerViewModel.getApplication(),
+                            mediaPlayerViewModel.fileState.value!!
+                        )
+                        .apply {
+                            mediaPlayerViewModel.playerDuration = duration
+                            getPlayTimeAsFlow()
+                                .onEach {
+                                    mediaPlayerViewModel._playerPositionState.value = it
+
+                                }
+                                .launchIn(coroutineScope)
+
+                        }
+
+                })
         Image(
             imageVector = Icons.Filled.ArrowForward,
             contentDescription = null,
@@ -128,10 +154,10 @@ private fun PlayerButtons(
 }
 
 @Composable
-private fun PlayerSlider(episodeDuration: Duration?) {
+private fun PlayerSlider(episodeDuration: Duration?, playerPosition: Float) {
     if (episodeDuration != null) {
         Column(Modifier.fillMaxWidth()) {
-            Slider(value = 0f, onValueChange = { })
+            Slider(value = playerPosition, onValueChange = { })
             Row(Modifier.fillMaxWidth()) {
                 Text(text = "0s")
                 Spacer(modifier = Modifier.weight(1f))
@@ -143,15 +169,11 @@ private fun PlayerSlider(episodeDuration: Duration?) {
 
 @Composable
 fun BroadcastDescription(
-    title: String,
-    name: String,
-    titleTextStyle: TextStyle = MaterialTheme.typography.titleMedium
+    title: String, name: String, titleTextStyle: TextStyle = MaterialTheme.typography.titleMedium
 ) {
     Text(text = title, style = titleTextStyle, maxLines = 1, overflow = TextOverflow.Ellipsis)
     Text(
-        text = name,
-        style = MaterialTheme.typography.bodyMedium,
-        maxLines = 1
+        text = name, style = MaterialTheme.typography.bodyMedium, maxLines = 1
     )
 
 }
