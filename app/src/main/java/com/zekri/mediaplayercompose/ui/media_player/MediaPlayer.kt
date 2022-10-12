@@ -5,6 +5,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.rounded.Phone
 import androidx.compose.material.icons.rounded.PlayArrow
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -107,7 +108,7 @@ private fun PlayerButtons(
             colorFilter = ColorFilter.tint(LocalContentColor.current),
             modifier = buttonsModifier
         )
-        Image(imageVector = Icons.Rounded.PlayArrow,
+        Image(imageVector =  if (!mediaPlayerViewModel.playerState.value) Icons.Rounded.PlayArrow else Icons.Rounded.Phone,
             contentDescription = null,
             contentScale = ContentScale.Fit,
             colorFilter = ColorFilter.tint(LocalContentColor.current),
