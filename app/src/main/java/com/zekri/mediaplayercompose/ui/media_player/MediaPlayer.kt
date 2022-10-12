@@ -20,7 +20,8 @@ fun MediaPlayerContent(modifier: Modifier, mediaPlayerViewModel: MediaPlayerView
     LaunchedEffect(key1 = true) {
         mediaPlayerViewModel.setMediaPlayerSource()
         mediaPlayerViewModel.getMediaRelativePositionAsFlow().collect {
-            playerRelativePosition.value = it
+            if (mediaPlayerViewModel.isPlaying())
+                playerRelativePosition.value = it
         }
 
     }
@@ -49,7 +50,7 @@ fun MediaPlayerContent(modifier: Modifier, mediaPlayerViewModel: MediaPlayerView
             ) {
 
                 PlayerSlider(
-                    mediaPlayerViewModel, playerRelativePosition.value
+                    mediaPlayerViewModel, playerRelativePosition
                 )
                 PlayerButtons(
                     Modifier.padding(vertical = 8.dp), mediaPlayerViewModel = mediaPlayerViewModel

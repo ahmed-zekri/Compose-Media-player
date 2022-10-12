@@ -66,4 +66,6 @@ class MediaPlayerHelperImpl : MediaPlayerHelper {
     override fun reset() = player.reset()
 
     override fun isPlaying() = player.isPlaying
+
+    override fun goToPosition(positionMs: Int) = player.seekTo(positionMs)
 }

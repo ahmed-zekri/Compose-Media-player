@@ -59,4 +59,6 @@ class MediaPlayerViewModel(
         NEXT, PREVIOUS
 
     }
+
+    fun seekTo(positionMs: Int) = mediaPlayerHelper.goToPosition(positionMs)
 }
