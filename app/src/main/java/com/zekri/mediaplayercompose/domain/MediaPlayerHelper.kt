@@ -16,4 +16,5 @@ interface MediaPlayerHelper {
     fun start()
     fun pause()
     fun stop()
+    fun isPlaying(): Boolean
 }

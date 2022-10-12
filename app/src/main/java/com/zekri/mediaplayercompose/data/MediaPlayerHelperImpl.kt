@@ -60,8 +60,8 @@ class MediaPlayerHelperImpl : MediaPlayerHelper {
 
     override fun start() = player.start()
 
-
     override fun pause() = player.pause()
 
     override fun stop() = player.stop()
+    override fun isPlaying() = player.isPlaying
 }

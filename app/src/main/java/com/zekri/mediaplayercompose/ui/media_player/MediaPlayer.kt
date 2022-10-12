@@ -115,7 +115,7 @@ private fun PlayerButtons(
                 .size(playerButtonSize)
                 .semantics { role = Role.Button }
                 .clickable {
-                    mediaPlayerViewModel.playMedia()
+                    if (mediaPlayerViewModel.isPlaying()) mediaPlayerViewModel.pauseMedia() else mediaPlayerViewModel.playMedia()
 
                 })
         Image(

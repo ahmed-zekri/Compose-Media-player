@@ -29,5 +29,7 @@ class MediaPlayerViewModel(
 
     fun getMediaRelativePositionAsFlow() = mediaPlayerHelper.getCurrentRelativePositionAsFlow()
 
+    fun isPlaying()=mediaPlayerHelper.isPlaying()
+
 
 }
