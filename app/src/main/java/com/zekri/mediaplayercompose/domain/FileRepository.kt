@@ -5,5 +5,5 @@ import com.zekri.mediaplayercompose.common.Result
 import java.io.File
 
 interface FileRepository {
-    fun getAllFilesInDirectory(context: Context,folderName: String): Result<List<File>>
+    fun getAllAudioFiles(context: Context): Result<List<File>>
 }

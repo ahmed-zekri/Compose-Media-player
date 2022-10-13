@@ -3,9 +3,7 @@ package com.zekri.mediaplayercompose.data
 import android.content.Context
 import android.media.AudioAttributes
 import android.media.MediaPlayer
-import android.media.UnsupportedSchemeException
 import androidx.core.net.toUri
-import com.zekri.mediaplayercompose.common.AUDIO_TYPES
 import com.zekri.mediaplayercompose.common.REFRESH_TIME
 import com.zekri.mediaplayercompose.domain.MediaPlayerHelper
 import kotlinx.coroutines.delay
@@ -37,7 +35,6 @@ class MediaPlayerHelperImpl : MediaPlayerHelper {
     override fun getTrackRelativePosition() = player.run { currentPosition.toFloat() / duration }
 
     override fun setAudioTrack(context: Context, file: File): File = file.apply {
-        if (extension !in AUDIO_TYPES) throw UnsupportedSchemeException("Invalid audio file")
         player.setDataSource(context, toUri())
         player.prepare()
 

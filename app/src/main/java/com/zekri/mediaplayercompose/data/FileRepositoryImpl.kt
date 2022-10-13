@@ -12,7 +12,7 @@ import java.io.File
 
 class FileRepositoryImpl : FileRepository {
 
-    override fun getAllFilesInDirectory(context: Context, folderName: String): Result<List<File>> {
+    override fun getAllAudioFiles(context: Context): Result<List<File>> {
         val items: MutableMap<String, Long> = mutableMapOf()
         val musicResolver: ContentResolver = context.contentResolver
         val musicUris = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
@@ -22,7 +22,7 @@ class FileRepositoryImpl : FileRepository {
                 MediaStore.Audio.Media.getContentUri(MediaStore.VOLUME_INTERNAL)
             )
         } else {
-            listOf()
+           return Result.Success(listOf())
         }
 
         musicUris.forEach {
