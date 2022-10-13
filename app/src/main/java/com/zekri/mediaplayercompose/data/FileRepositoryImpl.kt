@@ -13,7 +13,7 @@ import java.io.File
 class FileRepositoryImpl : FileRepository {
 
     override fun getAllFilesInDirectory(context: Context, folderName: String): Result<List<File>> {
-        val files = mutableListOf<File>()
+        val items: MutableMap<String, Long> = mutableMapOf()
         val musicResolver: ContentResolver = context.contentResolver
         val musicUris = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             listOf(
@@ -31,18 +31,21 @@ class FileRepositoryImpl : FileRepository {
             if (musicCursor != null && musicCursor.moveToFirst()) {
                 //get columns
 
-                val data: Int = musicCursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA)
+                val data: Int = musicCursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DATA)
+                val duration: Int =
+                    musicCursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DURATION)
 
                 do {
 
                     musicCursor.getString(data)?.apply {
-                        files.add(File(this))
+                        items[this] = musicCursor.getLong(duration)
 
                     }
                 } while (musicCursor.moveToNext())
             }
             musicCursor?.close()
         }
-        return Result.Success(files)
+        return Result.Success(items.toList().sortedBy { (_, value) -> value }.reversed()
+            .toMap().keys.map { File(it) })
     }
 }
