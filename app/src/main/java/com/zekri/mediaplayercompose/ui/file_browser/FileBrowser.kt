@@ -61,7 +61,7 @@ fun FileItem(file: File, navHostController: NavHostController, fileList: List<Fi
         Row(
             Modifier
                 .fillMaxWidth()
-                .padding(vertical = 15.dp)
+                .padding(vertical = 60.dp)
         ) {
             Icon(
                 imageVector = Icons.Default.Person,

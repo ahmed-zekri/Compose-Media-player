@@ -11,8 +11,7 @@ data class AudioFileType(
     )
 
 fun File.getAudioInfo(): AudioFileType {
-    if (extension !in AUDIO_TYPES)
-        throw UnsupportedSchemeException("Invalid audio file")
+
     val audioFileType = AudioFileType()
 
     MediaMetadataRetriever().run {
