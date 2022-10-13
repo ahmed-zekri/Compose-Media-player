@@ -1,7 +1,6 @@
 package com.zekri.mediaplayercompose.common
 
 import android.media.MediaMetadataRetriever
-import android.media.UnsupportedSchemeException
 import java.io.File
 
 data class AudioFileType(
