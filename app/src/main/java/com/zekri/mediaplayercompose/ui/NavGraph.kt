@@ -29,7 +29,8 @@ fun NavGraph(
         navController = navHostController, startDestination = Routes.BROWSER, modifier = modifier
     ) {
         composable(Routes.BROWSER) {
-            val fileBrowserViewModel = FileBrowserViewModel(appContainer.fileRepository)
+            val app = (LocalContext.current as Activity).application
+            val fileBrowserViewModel = FileBrowserViewModel(appContainer.fileRepository, app)
             FileBrowser(fileBrowserViewModel, modifier, navHostController)
         }
         composable(Routes.MEDIA_PLAYER) {
@@ -39,7 +40,7 @@ fun NavGraph(
                 appContainer,
                 app
             )
-            MediaPlayerContent(modifier, mediaPlayerViewModel,navHostController)
+            MediaPlayerContent(modifier, mediaPlayerViewModel, navHostController)
         }
 
     }
