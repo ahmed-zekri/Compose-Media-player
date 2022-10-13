@@ -9,6 +9,7 @@ interface MediaPlayerHelper {
     fun getTrackDuration(): Int
     fun setAudioTrack(context: Context, file: File): File
     fun getCurrentRelativePositionAsFlow(): Flow<Float>
+    fun getCurrentPosition(): Int
     fun start()
     fun pause()
     fun stop()

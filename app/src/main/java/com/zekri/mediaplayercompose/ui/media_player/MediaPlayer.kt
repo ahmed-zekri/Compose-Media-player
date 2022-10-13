@@ -68,7 +68,7 @@ fun MediaPlayerContent(
                     mediaPlayerViewModel, playerRelativePosition
                 )
                 PlayerButtons(
-                    Modifier.padding(vertical = 8.dp), mediaPlayerViewModel = mediaPlayerViewModel
+                    Modifier.padding(vertical = 8.dp), mediaPlayerViewModel = mediaPlayerViewModel, playerPosition = playerRelativePosition
                 )
             }
             Spacer(modifier = Modifier.weight(1f))

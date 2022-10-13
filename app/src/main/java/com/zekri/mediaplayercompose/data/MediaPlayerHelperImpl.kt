@@ -57,6 +57,8 @@ class MediaPlayerHelperImpl : MediaPlayerHelper {
 
     }
 
+    override fun getCurrentPosition(): Int = player.currentPosition
+
     override fun start() = player.start()
 
     override fun pause() = player.pause()

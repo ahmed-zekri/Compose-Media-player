@@ -37,6 +37,7 @@ class MediaPlayerViewModel(
     fun resetMedia() = mediaPlayerHelper.reset().also { _playerState.value = false }
 
     fun getMediaDuration() = mediaPlayerHelper.getTrackDuration()
+    fun getMediaPosition() = mediaPlayerHelper.getCurrentPosition()
 
     fun getMediaRelativePositionAsFlow() = mediaPlayerHelper.getCurrentRelativePositionAsFlow()
 
