@@ -46,6 +46,10 @@ class FileRepositoryImpl : FileRepository {
             musicCursor?.close()
         }
         return Result.Success(items.toList().sortedBy { (_, value) -> value }.reversed()
-            .toMap().keys.map { File(it) })
+            .toMap().keys.filter {
+                File(it).run { exists() && !isDirectory }
+
+
+            }.map { File(it) })
     }
 }
