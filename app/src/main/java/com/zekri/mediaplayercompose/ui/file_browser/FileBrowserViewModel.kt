@@ -6,11 +6,17 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.AndroidViewModel
 import com.zekri.mediaplayercompose.common.Result
+import com.zekri.mediaplayercompose.data.FileType
 import com.zekri.mediaplayercompose.domain.FileRepository
 import java.io.File
 
-class FileBrowserViewModel(fileRepository: FileRepository, application: Application) :
+class FileBrowserViewModel(
+    fileRepository: FileRepository,
+    application: Application,
+    val fileType: FileType = FileType.AUDIO
+) :
     AndroidViewModel(application) {
+
     private val _fileListState: MutableState<Result<List<File>>> = mutableStateOf(Result.Loading())
 
     val fileListState: State<Result<List<File>>> = _fileListState
@@ -18,7 +24,7 @@ class FileBrowserViewModel(fileRepository: FileRepository, application: Applicat
     init {
 
         _fileListState.value =
-            fileRepository.getAllAudioFiles(getApplication())
+            fileRepository.getAllFiles(getApplication(), fileType)
 
 
     }

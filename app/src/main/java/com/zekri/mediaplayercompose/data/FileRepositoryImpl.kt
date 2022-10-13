@@ -12,20 +12,29 @@ import java.io.File
 
 class FileRepositoryImpl : FileRepository {
 
-    override fun getAllAudioFiles(context: Context): Result<List<File>> {
+    override fun getAllFiles(context: Context, fileType: FileType): Result<List<File>> {
         val items: MutableMap<String, Long> = mutableMapOf()
         val musicResolver: ContentResolver = context.contentResolver
-        val musicUris = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            listOf(
-                MediaStore.Audio.Media.getContentUri(MediaStore.VOLUME_EXTERNAL_PRIMARY),
-                MediaStore.Audio.Media.getContentUri(MediaStore.VOLUME_EXTERNAL),
-                MediaStore.Audio.Media.getContentUri(MediaStore.VOLUME_INTERNAL)
-            )
+        val uris = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            when (fileType) {
+                FileType.AUDIO -> listOf(
+                    MediaStore.Audio.Media.getContentUri(MediaStore.VOLUME_EXTERNAL_PRIMARY),
+                    MediaStore.Audio.Media.getContentUri(MediaStore.VOLUME_EXTERNAL),
+                    MediaStore.Audio.Media.getContentUri(MediaStore.VOLUME_INTERNAL)
+                )
+                FileType.IMAGE -> listOf(
+                    MediaStore.Images.Media.getContentUri(MediaStore.VOLUME_EXTERNAL_PRIMARY),
+                    MediaStore.Images.Media.getContentUri(MediaStore.VOLUME_EXTERNAL),
+                    MediaStore.Images.Media.getContentUri(MediaStore.VOLUME_INTERNAL)
+                )
+
+            }
+
         } else {
-           return Result.Success(listOf())
+            return Result.Success(listOf())
         }
 
-        musicUris.forEach {
+        uris.forEach {
             val musicCursor: Cursor? = musicResolver.query(it, null, null, null, null)
 
             if (musicCursor != null && musicCursor.moveToFirst()) {
@@ -52,4 +61,11 @@ class FileRepositoryImpl : FileRepository {
 
             }.map { File(it) })
     }
+
+
+}
+
+enum class FileType {
+
+    IMAGE, AUDIO
 }
