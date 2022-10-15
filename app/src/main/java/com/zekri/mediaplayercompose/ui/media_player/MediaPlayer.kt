@@ -1,5 +1,6 @@
 package com.zekri.mediaplayercompose.ui.media_player
 
+import android.app.Activity
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.*
 import androidx.compose.runtime.Composable
@@ -8,23 +9,29 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.zekri.mediaplayercompose.common.formatMilliSecond
+import com.zekri.mediaplayercompose.domain.AppContainer
 import com.zekri.mediaplayercompose.ui.Routes
-
 
 @Composable
 fun MediaPlayerContent(
     modifier: Modifier,
-    mediaPlayerViewModel: MediaPlayerViewModel,
-    navHostController: NavHostController
+    navHostController: NavHostController,
+    appContainer: AppContainer,
 ) {
-
+    val context = LocalContext.current
+    val mediaPlayerViewModel = remember {
+        MediaPlayerViewModel(
+            navHostController.previousBackStackEntry?.savedStateHandle,
+            appContainer, (context as Activity).application
+        )
+    }
     val playerRelativePosition = remember {
         mutableStateOf(0f)
     }
-
     val backCallback = {
         mediaPlayerViewModel.resetMedia()
         navHostController.navigate(Routes.BROWSER)
@@ -38,7 +45,6 @@ fun MediaPlayerContent(
             if (mediaPlayerViewModel.isPlaying())
                 playerRelativePosition.value = it
         }
-
     }
 
     Column(
@@ -63,16 +69,16 @@ fun MediaPlayerContent(
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.weight(10f)
             ) {
-
                 PlayerSlider(
                     mediaPlayerViewModel, playerRelativePosition
                 )
                 PlayerButtons(
-                    Modifier.padding(vertical = 8.dp), mediaPlayerViewModel = mediaPlayerViewModel, playerPosition = playerRelativePosition
+                    Modifier.padding(vertical = 8.dp),
+                    mediaPlayerViewModel = mediaPlayerViewModel,
+                    playerPosition = playerRelativePosition
                 )
             }
             Spacer(modifier = Modifier.weight(1f))
         }
     }
-
 }

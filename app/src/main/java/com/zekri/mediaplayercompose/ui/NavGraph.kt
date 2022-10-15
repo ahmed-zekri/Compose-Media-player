@@ -1,27 +1,18 @@
 package com.zekri.mediaplayercompose.ui
 
-import android.app.Activity
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.zekri.mediaplayercompose.data.FileType
 import com.zekri.mediaplayercompose.domain.AppContainer
-import com.zekri.mediaplayercompose.ui.file_browser.FileBrowser
-import com.zekri.mediaplayercompose.ui.file_browser.FileBrowserViewModel
+import com.zekri.mediaplayercompose.ui.file_browser.TabLayout
 import com.zekri.mediaplayercompose.ui.media_player.MediaPlayerContent
-import com.zekri.mediaplayercompose.ui.media_player.MediaPlayerViewModel
 
 object Routes {
-
     const val BROWSER = "Browser"
     const val MEDIA_PLAYER = "MediaPlayer"
-
 }
-
-
 @Composable
 fun NavGraph(
     navHostController: NavHostController, appContainer: AppContainer, modifier: Modifier
@@ -30,25 +21,13 @@ fun NavGraph(
         navController = navHostController, startDestination = Routes.BROWSER, modifier = modifier
     ) {
         composable(Routes.BROWSER) {
-            val app = (LocalContext.current as Activity).application
-            val fileBrowserViewModel =
-                FileBrowserViewModel(appContainer.fileRepository, app, FileType.IMAGE)
-            FileBrowser(
-                fileBrowserViewModel,
-                modifier,
-                navHostController
+            TabLayout(
+                modifier = modifier,
+                navHostController = navHostController, appContainer = appContainer
             )
         }
         composable(Routes.MEDIA_PLAYER) {
-            val app = (LocalContext.current as Activity).application
-            val mediaPlayerViewModel = MediaPlayerViewModel(
-                navHostController.previousBackStackEntry?.savedStateHandle,
-                appContainer,
-                app
-            )
-            MediaPlayerContent(modifier, mediaPlayerViewModel, navHostController)
+            MediaPlayerContent(modifier, navHostController,appContainer)
         }
-
     }
-
 }

@@ -1,5 +1,6 @@
 package com.zekri.mediaplayercompose.ui.file_browser
 
+import android.app.Activity
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -21,32 +22,31 @@ import coil.request.ImageRequest
 import com.zekri.mediaplayercompose.common.Result
 import com.zekri.mediaplayercompose.common.getAudioInfo
 import com.zekri.mediaplayercompose.data.FileType
+import com.zekri.mediaplayercompose.domain.AppContainer
 import com.zekri.mediaplayercompose.ui.Routes
 import com.zekri.mediaplayercompose.ui.theme.Typography
 import java.io.File
 
 @Composable
 fun FileBrowser(
-    fileBrowserViewModel: FileBrowserViewModel,
+    appContainer: AppContainer,
     modifier: Modifier,
-    navHostController: NavHostController
+    navHostController: NavHostController,
+    fileType: FileType
 ) {
+    val fileBrowserViewModel = FileBrowserViewModel(
+        appContainer.fileRepository,
+        (LocalContext.current as Activity).application,
+        fileType = fileType
+    )
     val state = fileBrowserViewModel.fileListState
 
-    val fileType = fileBrowserViewModel.fileType
-
-
     when (val result = state.value) {
-
         is Result.Error -> Text(text = result.error ?: "")
-
         is Result.Success -> FileBrowserList(result.data!!, modifier, navHostController, fileType)
         else -> {}
     }
-
-
 }
-
 @Composable
 fun FileBrowserList(
     data: List<File>,
@@ -57,11 +57,9 @@ fun FileBrowserList(
     LazyColumn(modifier = modifier.fillMaxSize()) {
         items(data.size) {
             FileItem(data[it], navHostController, data, fileType)
-
         }
     }
 }
-
 @Composable
 fun FileItem(
     file: File,
@@ -78,7 +76,6 @@ fun FileItem(
     }) {
         if (fileType == FileType.IMAGE)
             Row {
-
                 AsyncImage(
                     model =
                     ImageRequest
@@ -86,8 +83,6 @@ fun FileItem(
                         .data(data = file)
                         .build(), contentDescription = null, modifier = Modifier.fillMaxWidth()
                 )
-
-
             }
 
         Row(
@@ -110,7 +105,6 @@ fun FileItem(
             )
             if (fileType == FileType.AUDIO) {
                 file.getAudioInfo().author?.apply {
-
                     Spacer(modifier = Modifier.height(5.dp))
                     Text(
                         text = this,
@@ -139,12 +133,10 @@ fun FileItem(
                 contentDescription = file.name,
                 modifier = Modifier.padding(horizontal = 5.dp)
             )
-
         }
 
 
 
         Divider(modifier = Modifier.fillMaxWidth(), thickness = 2.dp)
     }
-
 }
