@@ -22,7 +22,7 @@ fun NavGraph(
     ) {
         composable(Routes.BROWSER) {
             TabLayout(
-                modifier = modifier,
+                modifier = Modifier,
                 navHostController = navHostController, appContainer = appContainer
             )
         }

@@ -4,13 +4,15 @@ import android.app.Activity
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.MoreVert
-import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.Image
+import androidx.compose.material.icons.filled.PlayCircle
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -43,7 +45,12 @@ fun FileBrowser(
 
     when (val result = state.value) {
         is Result.Error -> Text(text = result.error ?: "")
-        is Result.Success -> FileBrowserList(result.data!!, modifier, navHostController, fileType)
+        is Result.Success -> {
+            val data = remember {
+                result.data!!
+            }
+            FileBrowserList(data, modifier, navHostController, fileType)
+        }
         else -> {}
     }
 }
@@ -55,7 +62,10 @@ fun FileBrowserList(
     fileType: FileType = FileType.AUDIO
 ) {
     LazyColumn(modifier = modifier.fillMaxSize()) {
-        items(data.size) {
+        items(data.size,
+            {
+                data[it]
+            }) {
             FileItem(data[it], navHostController, data, fileType)
         }
     }
@@ -74,68 +84,54 @@ fun FileItem(
             navHostController.navigate(Routes.MEDIA_PLAYER)
         }
     }) {
-        if (fileType == FileType.IMAGE)
-            Row {
-                AsyncImage(
-                    model =
-                    ImageRequest
-                        .Builder(LocalContext.current)
-                        .data(data = file)
-                        .build(), contentDescription = null, modifier = Modifier.fillMaxWidth()
+        if (fileType == FileType.IMAGE) Row {
+            AsyncImage(
+                model = ImageRequest.Builder(LocalContext.current).data(data = file).build(),
+                contentDescription = null,
+                modifier = Modifier.fillMaxWidth()
+            )
+        }
+        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+            Row(
+                Modifier
+                    .fillMaxWidth()
+                    .padding(top = 25.dp, bottom = 25.dp, start = 10.dp, end = 7.dp)
+            ) {
+                Icon(
+                    imageVector = if (fileType == FileType.AUDIO) Icons.Default.PlayCircle else Icons.Default.Image,
+                    contentDescription = file.name,
+                    modifier = Modifier.padding(horizontal = 10.dp)
                 )
-            }
-
-        Row(
-            Modifier
-                .fillMaxWidth()
-                .padding(vertical = 60.dp)
-        ) {
-            Icon(
-                imageVector = Icons.Default.Person,
-                contentDescription = file.name,
-                modifier = Modifier.padding(horizontal = 5.dp)
-            )
-
-            Text(
-                text = file.name,
-                overflow = TextOverflow.Ellipsis,
-                maxLines = 1,
-                style = Typography.titleLarge,
-                modifier = Modifier.width(250.dp)
-            )
-            if (fileType == FileType.AUDIO) {
-                file.getAudioInfo().author?.apply {
-                    Spacer(modifier = Modifier.height(5.dp))
-                    Text(
-                        text = this,
-                        overflow = TextOverflow.Ellipsis,
-                        maxLines = 1,
-                        style = Typography.titleLarge,
-                        modifier = Modifier.width(250.dp)
-                    )
-                }
-
-
-
+                Text(
+                    text = file.name,
+                    maxLines = 2,
+                    overflow = TextOverflow.Ellipsis,
+                    style = MaterialTheme.typography.subtitle1
+                )
 
                 Spacer(modifier = Modifier.weight(1f))
 
-                Text(
-                    text = file.getAudioInfo().Duration ?: "",
+                if (fileType == FileType.AUDIO) Text(
+                    text = file.getAudioInfo().duration ?: "",
                     overflow = TextOverflow.Ellipsis,
                     maxLines = 1,
                     style = Typography.titleMedium,
                 )
             }
-            Spacer(modifier = Modifier.weight(1f))
-            Icon(
-                imageVector = Icons.Default.MoreVert,
-                contentDescription = file.name,
-                modifier = Modifier.padding(horizontal = 5.dp)
-            )
+            if (fileType == FileType.AUDIO) {
+                Row {
+                    file.getAudioInfo().date?.apply {
+                        Spacer(modifier = Modifier.height(5.dp))
+                        Text(
+                            text = this,
+                            maxLines = 2,
+                            overflow = TextOverflow.Ellipsis,
+                            style = MaterialTheme.typography.subtitle2,
+                        )
+                    }
+                }
+            }
         }
-
-
 
         Divider(modifier = Modifier.fillMaxWidth(), thickness = 2.dp)
     }

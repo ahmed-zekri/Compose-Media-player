@@ -4,9 +4,10 @@ import android.media.MediaMetadataRetriever
 import java.io.File
 
 data class AudioFileType(
-    var Duration: String? = null,
+    var duration: String? = null,
     var author: String? = null,
-    )
+    var date: String? = null
+)
 
 fun File.getAudioInfo(): AudioFileType {
     val audioFileType = AudioFileType()
@@ -14,10 +15,13 @@ fun File.getAudioInfo(): AudioFileType {
     MediaMetadataRetriever().run {
         setDataSource(absolutePath)
         extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION)?.apply {
-            audioFileType.Duration = toLong().formatMilliSecond()
+            audioFileType.duration = toLong().formatMilliSecond()
         }
         extractMetadata(MediaMetadataRetriever.METADATA_KEY_AUTHOR)?.apply {
             audioFileType.author = this
+        }
+        extractMetadata(MediaMetadataRetriever.METADATA_KEY_DATE)?.apply {
+            audioFileType.date = this
         }
     }
 
