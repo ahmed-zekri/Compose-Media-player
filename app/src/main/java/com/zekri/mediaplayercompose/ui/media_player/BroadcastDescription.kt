@@ -14,5 +14,4 @@ fun BroadcastDescription(
     Text(
         text = name, style = MaterialTheme.typography.bodyMedium, maxLines = 1
     )
-
 }

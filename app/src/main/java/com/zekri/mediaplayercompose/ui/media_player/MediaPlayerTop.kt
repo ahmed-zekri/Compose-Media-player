@@ -22,14 +22,10 @@ fun MediaPlayerTop(backCallback: () -> Unit) {
 
         IconButton(onClick = { /*TODO*/ }) {
             Icon(imageVector = Icons.Default.Add, contentDescription = null)
-
         }
 
         IconButton(onClick = { /*TODO*/ }) {
             Icon(imageVector = Icons.Default.MoreVert, contentDescription = null)
-
         }
-
-
     }
 }

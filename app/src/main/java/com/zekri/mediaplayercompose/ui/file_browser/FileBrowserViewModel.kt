@@ -16,17 +16,11 @@ class FileBrowserViewModel(
     val fileType: FileType = FileType.AUDIO
 ) :
     AndroidViewModel(application) {
-
     private val _fileListState: MutableState<Result<List<File>>> = mutableStateOf(Result.Loading())
-
     val fileListState: State<Result<List<File>>> = _fileListState
 
     init {
-
         _fileListState.value =
             fileRepository.getAllFiles(getApplication(), fileType)
-
-
     }
-
 }

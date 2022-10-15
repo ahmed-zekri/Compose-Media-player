@@ -1,6 +1,5 @@
 package com.zekri.mediaplayercompose
 
-
 import android.Manifest
 import android.content.pm.PackageManager
 import android.os.Bundle
@@ -16,8 +15,6 @@ import com.zekri.mediaplayercompose.ui.theme.MediaPlayerComposeTheme
 import com.zekri.mediaplayercompose.ui.utils.verticalGradientScrim
 
 class MainActivity : ComponentActivity() {
-
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 // Register the permissions callback, which handles the user's response to the
@@ -29,7 +26,6 @@ class MainActivity : ComponentActivity() {
                 ActivityResultContracts.RequestPermission()
             ) { isGranted: Boolean ->
                 if (isGranted) {
-
                     listBrowserContent()
                     // Permission is granted. Continue the action or workflow in your
                     // app.
@@ -57,22 +53,17 @@ class MainActivity : ComponentActivity() {
                 setContent { Text(text = "Please allow the permission") }
             }
             else -> {
-
                 // You can directly ask for the permission.
                 // The registered ActivityResultCallback gets the result of this request.
                 requestPermissionLauncher.launch(Manifest.permission.READ_EXTERNAL_STORAGE)
             }
         }
-
-
     }
 
     private fun listBrowserContent() {
-
         setContent {
             MediaPlayerComposeTheme {
                 // A surface container using the 'background' color from the theme
-
                 NavGraph(
                     navHostController = rememberNavController(),
                     appContainer = (applicationContext as App).container,
@@ -80,13 +71,10 @@ class MainActivity : ComponentActivity() {
                         color = MaterialTheme.colorScheme.primary.copy(alpha = 0.50f),
                         startYPercentage = 1f,
                         endYPercentage = 0f
-
                     )
                 )
-
             }
         }
-
     }
 }
 

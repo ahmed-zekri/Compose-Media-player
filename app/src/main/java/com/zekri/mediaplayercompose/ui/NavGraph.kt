@@ -27,7 +27,7 @@ fun NavGraph(
             )
         }
         composable(Routes.MEDIA_PLAYER) {
-            MediaPlayerContent(modifier, navHostController,appContainer)
+            MediaPlayerContent(modifier, navHostController, appContainer)
         }
     }
 }

@@ -21,7 +21,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.semantics.Role
-
 import androidx.compose.ui.semantics.role
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.Dp
@@ -30,9 +29,7 @@ import com.zekri.mediaplayercompose.common.SKIP_STEP
 
 enum class SkipDirection {
     FORWARD, BACKWARD
-
 }
-
 @Composable
 fun PlayerButtons(
     modifier: Modifier = Modifier,
@@ -40,7 +37,6 @@ fun PlayerButtons(
     sideButtonSize: Dp = 48.dp,
     mediaPlayerViewModel: MediaPlayerViewModel,
     playerPosition: MutableState<Float>
-
 ) {
     val skipTo: MediaPlayerViewModel.(SkipDirection) -> Unit = {
         val mediaDuration = getMediaDuration()
@@ -56,7 +52,6 @@ fun PlayerButtons(
         if (mediaDuration != 0)
             playerPosition.value = newPosition.toFloat() / mediaDuration
         mediaPlayerViewModel.playMedia()
-
     }
 
     Row(
@@ -97,7 +92,6 @@ fun PlayerButtons(
                 .semantics { role = Role.Button }
                 .clickable {
                     if (mediaPlayerViewModel.isPlaying()) mediaPlayerViewModel.pauseMedia() else mediaPlayerViewModel.playMedia()
-
                 })
         Image(
             imageVector = Icons.Filled.ArrowForward,
@@ -106,7 +100,6 @@ fun PlayerButtons(
             colorFilter = ColorFilter.tint(LocalContentColor.current),
             modifier = buttonsModifier.clickable {
                 skipTo(mediaPlayerViewModel, SkipDirection.FORWARD)
-
             }
         )
         Image(

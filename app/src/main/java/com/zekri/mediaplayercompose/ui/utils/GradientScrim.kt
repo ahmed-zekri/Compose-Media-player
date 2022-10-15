@@ -64,7 +64,6 @@ fun Modifier.verticalGradientScrim(
             listOf(color.copy(alpha = 0f), color)
         }
     }
-
     val brush = remember(colors, startYPercentage, endYPercentage) {
         // Reverse the gradient if decaying downwards
         Brush.verticalGradient(

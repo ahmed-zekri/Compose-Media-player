@@ -35,7 +35,7 @@ fun TabLayout(
     // on below line we are creating a column for our widgets.
     Column(
         // for column we are specifying modifier on below line.
-        modifier =modifier
+        modifier = modifier
     ) {
         // on the below line we are specifying the top app bar
         // and specifying background color for it.
@@ -104,7 +104,7 @@ fun Tabs(pagerState: PagerState) {
         selectedTabIndex = pagerState.currentPage,
         // on below line we are
         // specifying background color.
-      //  backgroundColor = Color.Cyan,
+        //  backgroundColor = Color.Cyan,
         // on below line we are specifying content color.
         // contentColor = Color.White,
         // on below line we are specifying

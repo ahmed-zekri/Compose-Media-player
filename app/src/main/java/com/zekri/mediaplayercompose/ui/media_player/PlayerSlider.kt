@@ -32,5 +32,4 @@ fun PlayerSlider(
             Text(mediaPlayerViewModel.getMediaDuration().toLong().formatMilliSecond())
         }
     }
-
 }

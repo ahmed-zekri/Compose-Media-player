@@ -19,7 +19,5 @@ fun PlayerImage(imageUrl: String, modifier: Modifier = Modifier) {
         modifier = modifier
             .sizeIn(maxHeight = 500.dp, maxWidth = 500.dp)
             .aspectRatio(1f)
-
     )
-
 }

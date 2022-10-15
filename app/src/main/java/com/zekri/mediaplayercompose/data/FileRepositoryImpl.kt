@@ -9,9 +9,7 @@ import com.zekri.mediaplayercompose.common.Result
 import com.zekri.mediaplayercompose.domain.FileRepository
 import java.io.File
 
-
 class FileRepositoryImpl : FileRepository {
-
     override fun getAllFiles(context: Context, fileType: FileType): Result<List<File>> {
         val items: MutableMap<String, Long> = mutableMapOf()
         val musicResolver: ContentResolver = context.contentResolver
@@ -27,9 +25,7 @@ class FileRepositoryImpl : FileRepository {
                     MediaStore.Images.Media.getContentUri(MediaStore.VOLUME_EXTERNAL),
                     MediaStore.Images.Media.getContentUri(MediaStore.VOLUME_INTERNAL)
                 )
-
             }
-
         } else {
             return Result.Success(listOf())
         }
@@ -39,16 +35,13 @@ class FileRepositoryImpl : FileRepository {
 
             if (musicCursor != null && musicCursor.moveToFirst()) {
                 //get columns
-
                 val data: Int = musicCursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DATA)
                 val duration: Int =
                     musicCursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DURATION)
 
                 do {
-
                     musicCursor.getString(data)?.apply {
                         items[this] = musicCursor.getLong(duration)
-
                     }
                 } while (musicCursor.moveToNext())
             }
@@ -57,15 +50,10 @@ class FileRepositoryImpl : FileRepository {
         return Result.Success(items.toList().sortedBy { (_, value) -> value }.reversed()
             .toMap().keys.filter {
                 File(it).run { exists() && !isDirectory }
-
-
             }.map { File(it) })
     }
-
-
 }
 
 enum class FileType {
-
     IMAGE, AUDIO
 }
