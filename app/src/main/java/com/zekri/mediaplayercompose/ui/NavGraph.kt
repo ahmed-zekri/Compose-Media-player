@@ -23,7 +23,7 @@ fun NavGraph(
         composable(Routes.BROWSER) {
             TabLayout(
                 modifier = Modifier,
-                navHostController = navHostController, appContainer = appContainer
+                navHostController = navHostController
             )
         }
         composable(Routes.MEDIA_PLAYER) {

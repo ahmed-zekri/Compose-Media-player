@@ -1,6 +1,6 @@
 package com.zekri.mediaplayercompose.ui.file_browser
 
-
+import android.app.Activity
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -14,20 +14,19 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.*
 import androidx.navigation.NavHostController
 import com.google.accompanist.pager.*
-import com.zekri.mediaplayercompose.data.FileType
-import com.zekri.mediaplayercompose.domain.AppContainer
+import com.zekri.mediaplayercompose.App
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalPagerApi::class, ExperimentalUnitApi::class)
 @Composable
 fun TabLayout(
-    appContainer: AppContainer,
     modifier: Modifier,
     navHostController: NavHostController
 ) {
@@ -77,8 +76,7 @@ fun TabLayout(
         TabsContent(
             pagerState = pagerState,
             modifier = modifier,
-            navHostController = navHostController,
-            appContainer = appContainer
+            navHostController = navHostController
         )
     }
 }
@@ -165,7 +163,6 @@ fun Tabs(pagerState: PagerState) {
 fun TabsContent(
     pagerState: PagerState,
     modifier: Modifier,
-    appContainer: AppContainer,
     navHostController: NavHostController
 ) {
     // on below line we are creating
@@ -174,23 +171,15 @@ fun TabsContent(
         // on below line we are specifying
         // the different pages.
             page ->
-        when (page) {
-            0 -> {
-                FileBrowser(
-                    appContainer = appContainer,
-                    modifier = modifier,
-                    navHostController = navHostController,
-                    fileType = FileType.AUDIO
-                )
-            }
-            1 -> {
-                FileBrowser(
-                    appContainer = appContainer,
-                    modifier = modifier,
-                    navHostController = navHostController,
-                    fileType = FileType.IMAGE
-                )
-            }
-        }
+        val app = ((LocalContext.current as Activity).application) as App
+        FileBrowser(
+            appContainer = when (page) {
+                0 -> app.containerAudio
+                else -> app.containerImage
+            },
+            modifier = modifier,
+            navHostController = navHostController
+        )
     }
 }
+

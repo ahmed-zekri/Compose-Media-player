@@ -66,7 +66,7 @@ class MainActivity : ComponentActivity() {
                 // A surface container using the 'background' color from the theme
                 NavGraph(
                     navHostController = rememberNavController(),
-                    appContainer = (applicationContext as App).container,
+                    appContainer = (applicationContext as App).containerImage,
                     Modifier.verticalGradientScrim(
                         color = MaterialTheme.colorScheme.primary.copy(alpha = 0.50f),
                         startYPercentage = 1f,
