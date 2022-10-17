@@ -27,6 +27,7 @@ import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.zekri.mediaplayercompose.common.AUDIO_TYPES
 import com.zekri.mediaplayercompose.common.getAudioInfo
+import com.zekri.mediaplayercompose.common.isAudioFile
 import com.zekri.mediaplayercompose.domain.AppContainer
 import com.zekri.mediaplayercompose.ui.Routes
 import kotlinx.coroutines.flow.Flow
@@ -64,53 +65,53 @@ fun FileBrowserList(
 }
 @Composable
 fun FileItem(
-    file: File,
-    navHostController: NavHostController,
-    fileList: List<File>
+    file: File, navHostController: NavHostController, fileList: List<File>
 ) {
-    Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.clickable {
-        if (file.extension in AUDIO_TYPES) {
-            navHostController.currentBackStackEntry?.savedStateHandle?.set("audio", file)
-            navHostController.currentBackStackEntry?.savedStateHandle?.set("audioFiles", fileList)
-            navHostController.navigate(Routes.MEDIA_PLAYER)
-        }
-    }) {
-        if (file.extension !in AUDIO_TYPES) Row {
-            AsyncImage(
-                model = ImageRequest.Builder(LocalContext.current).data(data = file).build(),
-                contentDescription = null,
-                modifier = Modifier.fillMaxWidth()
-            )
-        }
-        Column(horizontalAlignment = Alignment.CenterHorizontally) {
-            Row(
-                Modifier
-                    .fillMaxWidth()
-                    .padding(top = 25.dp, bottom = 25.dp, start = 10.dp, end = 7.dp)
-            ) {
-                Icon(
-                    imageVector = if (file.extension in AUDIO_TYPES) Icons.Default.PlayCircle else Icons.Default.Image,
-                    contentDescription = file.name,
-                    modifier = Modifier.padding(horizontal = 10.dp)
+    file.apply {
+        Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.clickable {
+            if (isAudioFile()) {
+                navHostController.currentBackStackEntry?.savedStateHandle?.set("audio", file)
+                navHostController.currentBackStackEntry?.savedStateHandle?.set(
+                    "audioFiles", fileList
                 )
-                Text(
-                    text = file.name,
-                    maxLines = 2,
-                    overflow = TextOverflow.Ellipsis,
-                    style = MaterialTheme.typography.subtitle1
-                )
-
-                Spacer(modifier = Modifier.weight(1f))
-                if (file.extension in AUDIO_TYPES) Text(
-                    text = file.getAudioInfo().duration ?: "",
-                    overflow = TextOverflow.Ellipsis,
-                    maxLines = 1,
-                    style = MaterialTheme.typography.subtitle2,
+                navHostController.navigate(Routes.MEDIA_PLAYER)
+            }
+        }) {
+            if (!isAudioFile()) Row {
+                AsyncImage(
+                    model = ImageRequest.Builder(LocalContext.current).data(data = file).build(),
+                    contentDescription = null,
+                    modifier = Modifier.fillMaxWidth()
                 )
             }
-            if (file.extension in AUDIO_TYPES)
-                Row {
-                    file.getAudioInfo().date?.apply {
+            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                Row(
+                    Modifier
+                        .fillMaxWidth()
+                        .padding(top = 25.dp, bottom = 25.dp, start = 10.dp, end = 7.dp)
+                ) {
+                    Icon(
+                        imageVector = if (extension in AUDIO_TYPES) Icons.Default.PlayCircle else Icons.Default.Image,
+                        contentDescription = name,
+                        modifier = Modifier.padding(horizontal = 10.dp)
+                    )
+                    Text(
+                        text = name,
+                        maxLines = 2,
+                        overflow = TextOverflow.Ellipsis,
+                        style = MaterialTheme.typography.subtitle1
+                    )
+
+                    Spacer(modifier = Modifier.weight(1f))
+                    if (isAudioFile()) Text(
+                        text = getAudioInfo().duration ?: "",
+                        overflow = TextOverflow.Ellipsis,
+                        maxLines = 1,
+                        style = MaterialTheme.typography.subtitle2,
+                    )
+                }
+                if (isAudioFile()) Row {
+                    getAudioInfo().date?.apply {
                         Spacer(modifier = Modifier.height(5.dp))
                         Text(
                             text = this,
@@ -120,8 +121,9 @@ fun FileItem(
                         )
                     }
                 }
-        }
+            }
 
-        Divider(modifier = Modifier.fillMaxWidth(), thickness = 2.dp)
+            Divider(modifier = Modifier.fillMaxWidth(), thickness = 2.dp)
+        }
     }
 }

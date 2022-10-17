@@ -43,3 +43,5 @@ fun Long.formatMilliSecond(): String {
 
     return finalTimerString
 }
+
+fun File.isAudioFile() = extension in AUDIO_TYPES
