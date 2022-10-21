@@ -10,7 +10,7 @@ class FilePagingSource constructor(private val fileRepository: FileRepository) :
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, File> {
         return try {
             val position = params.key ?: 1
-            val response = fileRepository.filesPager(position)
+            val response = fileRepository.getFiles(position)
             LoadResult.Page(
                 data = response,
                 prevKey = if (position == 1) null else position - 1,

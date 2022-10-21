@@ -65,7 +65,7 @@ class FileRepositoryImpl(private val context: Context, private val fileType: Fil
             }.map { File(it) }
     }
 
-    override fun filesPager(page: Int): List<File> =
+    override fun getFiles(page: Int): List<File> =
         files.subList(PAGE_LENGTH * page, PAGE_LENGTH * page + PAGE_LENGTH)
 }
 
