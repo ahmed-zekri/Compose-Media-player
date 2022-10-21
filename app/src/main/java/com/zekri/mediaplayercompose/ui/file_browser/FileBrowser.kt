@@ -25,9 +25,8 @@ import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.items
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
-import com.zekri.mediaplayercompose.common.AUDIO_TYPES
 import com.zekri.mediaplayercompose.common.getAudioInfo
-import com.zekri.mediaplayercompose.common.isAudioFile
+import com.zekri.mediaplayercompose.data.AppContainerImpAudio
 import com.zekri.mediaplayercompose.domain.AppContainer
 import com.zekri.mediaplayercompose.ui.Routes
 import kotlinx.coroutines.flow.Flow
@@ -39,18 +38,22 @@ fun FileBrowser(
     modifier: Modifier,
     navHostController: NavHostController,
 ) {
+    val isAudioFile = remember {
+        appContainer is AppContainerImpAudio
+    }
     val items = remember {
         mutableStateOf(
             appContainer.pagerRepository.getFiles()
         )
     }
-    FileBrowserList(items, modifier, navHostController)
+    FileBrowserList(items, modifier, navHostController, isAudioFile)
 }
 @Composable
 fun FileBrowserList(
     data: MutableState<Flow<PagingData<File>>>,
     modifier: Modifier,
     navHostController: NavHostController,
+    isAudioFile: Boolean,
 ) {
     val pagingItems = data.value.collectAsLazyPagingItems()
     LazyColumn(modifier = modifier.fillMaxSize()) {
@@ -58,18 +61,21 @@ fun FileBrowserList(
             FileItem(
                 file = it!!,
                 navHostController = navHostController,
-                fileList = pagingItems.itemSnapshotList.items
+                fileList = pagingItems.itemSnapshotList.items, isAudioFile
             )
         }
     }
 }
 @Composable
 fun FileItem(
-    file: File, navHostController: NavHostController, fileList: List<File>
+    file: File, navHostController: NavHostController, fileList: List<File>, isAudioFile: Boolean
 ) {
     file.apply {
+        val duration = remember {
+            getAudioInfo().duration
+        }
         Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.clickable {
-            if (isAudioFile()) {
+            if (isAudioFile) {
                 navHostController.currentBackStackEntry?.savedStateHandle?.set("audio", file)
                 navHostController.currentBackStackEntry?.savedStateHandle?.set(
                     "audioFiles", fileList
@@ -77,7 +83,7 @@ fun FileItem(
                 navHostController.navigate(Routes.MEDIA_PLAYER)
             }
         }) {
-            if (!isAudioFile()) Row {
+            if (!isAudioFile) Row {
                 AsyncImage(
                     model = ImageRequest.Builder(LocalContext.current).data(data = file).build(),
                     contentDescription = null,
@@ -91,7 +97,7 @@ fun FileItem(
                         .padding(top = 25.dp, bottom = 25.dp, start = 10.dp, end = 7.dp)
                 ) {
                     Icon(
-                        imageVector = if (extension in AUDIO_TYPES) Icons.Default.PlayCircle else Icons.Default.Image,
+                        imageVector = if (isAudioFile) Icons.Default.PlayCircle else Icons.Default.Image,
                         contentDescription = name,
                         modifier = Modifier.padding(horizontal = 10.dp)
                     )
@@ -103,23 +109,12 @@ fun FileItem(
                     )
 
                     Spacer(modifier = Modifier.weight(1f))
-                    if (isAudioFile()) Text(
-                        text = getAudioInfo().duration ?: "",
+                    if (isAudioFile) Text(
+                        text = duration ?: "",
                         overflow = TextOverflow.Ellipsis,
                         maxLines = 1,
                         style = MaterialTheme.typography.subtitle2,
                     )
-                }
-                if (isAudioFile()) Row {
-                    getAudioInfo().date?.apply {
-                        Spacer(modifier = Modifier.height(5.dp))
-                        Text(
-                            text = this,
-                            maxLines = 2,
-                            overflow = TextOverflow.Ellipsis,
-                            style = MaterialTheme.typography.subtitle2,
-                        )
-                    }
                 }
             }
 
